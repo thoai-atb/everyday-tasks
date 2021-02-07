@@ -1,0 +1,94 @@
+@import url('https://fonts.googleapis.com/css2?family=Righteous&family=Yantramanav:wght@100&display=swap');
+
+body {
+  text-align: center;
+  align-items: center;
+  background-color: #ddf0ed;
+}
+
+h1 {
+  font-family: 'Righteous', cursive;
+  font-size: 50px;
+}
+
+.container {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: space-around;
+  position: relative;
+  width: 600px;
+  height: 80vh;
+  margin-top: 50px;
+  border: 1px solid rgb(31, 24, 24);
+  border-radius: 30px;
+  box-shadow: 1em 1em rgb(168, 168, 168);
+  background-color: #f5fcfb;
+  font-size: 30px;
+}
+
+.scroll {
+  margin-right: 30px;
+  margin-left: 30px;
+  height: 70%;
+  overflow-y: auto;
+}
+
+.task {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 20px;
+  padding-right: 20px;
+  width: 70%;
+  margin-bottom: 20px;
+  border-radius: 30px;
+  background-color:#c1e0d3;
+}
+
+.task p {
+  display: inline-block;
+  font-family: 'Yantramanav', sans-serif;
+  font-size: 25px;
+  font-weight: bolder;
+}
+
+/* Scroll Bar */
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.footer {
+  width: 100%;
+}
+
+.reset-bar {
+  display: inline-flex;
+  background-color:rgb(88, 88, 88);
+  align-items: center;
+  justify-content: center;
+  width: 70%;
+  height: 60px;
+  margin: 20px;
+  border-radius: 500px;
+  box-shadow: inset 0px 0px 5px 5px rgb(0, 0, 0);
+  font-family: 'Yantramanav', sans-serif;
+  font-size: 25px;
+  font-weight: bolder;
+  color: rgb(199, 199, 199);
+}
+
