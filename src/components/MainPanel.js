@@ -8,37 +8,41 @@ const MainPanel = () => {
     const [resetSwitchStatus, setResetSwitchStatus] = useState(false);
     
     useEffect(() => {
-        const data = [
-            {
-                id: 1,
-                name: 'Breakfast',
-                checked: false
-            },
-            {
-                id: 2,
-                name: 'Lunch',
-                checked: false
-            },
-            {
-                id: 3,
-                name: 'Dinner',
-                checked: false
-            },
-            {
-                id: 4,
-                name: 'Go to bed',
-                checked: false
-            }
-        ];
-        setTasks(data);
+        const fetchData = async () => {
+            const res = await fetch('/tasks');
+            const data = await res.json();
+            setTasks(data);
+        } 
+        fetchData();
     }, []);
 
     useEffect(() => {
         setDisableReset(!tasks.every(t => t.checked));
     }, [tasks])
 
-    const onSwitch = ({e, id}) => {
-        setTasks(tasks.map(t => t.id == id ? {...t, checked: !t.checked} : t));
+    const fetchTask = async (id) => {
+        console.log('fetching task ... ');
+        const res = await fetch(`/task/${id}`);
+        console.log('task fetched ... ');
+        const data = await res.json();
+        console.log('json converted ... ');
+        return data;
+    }
+
+    const onSwitch = async ({e, id}) => {
+        console.log('onswitch');
+        const toBeUpdated = await fetchTask(id);
+        console.log(toBeUpdated);
+        const updatedTask = {...toBeUpdated, checked : 1 - toBeUpdated.checked};
+        console.log(updatedTask);
+        setTasks(tasks.map(t => t.id == id ? updatedTask : t));
+        const res = await fetch(`/task/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-type' : 'application/json'
+            },
+            body: JSON.stringify(updatedTask)
+        });
     }
 
     const resetAll = () => {
