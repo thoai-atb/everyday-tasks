@@ -2,49 +2,34 @@ import Task from './Task.js'
 import Footer from './Footer.js'
 import {useState, useEffect} from 'react';
 
-const fetchTest = async () => {
-    console.log('fetching task ... ');
-    const res = await fetch(`/tasks`);
-    console.log('task fetched ... ');
-    const data = await res.json();
-    console.log('json converted ... ');
-    return data;
-}
-
 const MainPanel = () => {
     const [disableReset, setDisableReset] = useState(true);
     const [tasks, setTasks] = useState([]);
     const [resetSwitchStatus, setResetSwitchStatus] = useState(false);
     
     useEffect(() => {
-        const fetchData = async () => {
-            const res = await fetch('/tasks');
-            const data = await res.json();
-            setTasks(data);
-        } 
         fetchData();
     }, []);
 
     useEffect(() => {
         setDisableReset(!tasks.every(t => t.checked));
     }, [tasks])
+    
+    const fetchData = async () => {
+        const res = await fetch('/tasks');
+        const data = await res.json();
+        setTasks(data);
+    } 
 
     const fetchTask = async (id) => {
-        console.log('fetching task ... ');
         const res = await fetch(`/task/${id}`);
-        console.log('task fetched ... ');
         const data = await res.json();
-        console.log('json converted ... ');
         return data;
     }
 
     const onSwitch = async ({e, id}) => {
-        console.log('onswitch');
         const toBeUpdated = await fetchTask(id);
-        console.log(toBeUpdated);
         const updatedTask = {...toBeUpdated, checked : 1 - toBeUpdated.checked};
-        console.log(updatedTask);
-        setTasks(tasks.map(t => t.id == id ? updatedTask : t));
         const res = await fetch(`/task/${id}`, {
             method: 'PUT',
             headers: {
@@ -52,10 +37,12 @@ const MainPanel = () => {
             },
             body: JSON.stringify(updatedTask)
         });
+        setTasks(tasks.map(t => t.id == id ? updatedTask : t));
     }
 
-    const resetAll = () => {
-        setTasks(tasks.map(t => { return {...t, checked: false}}));
+    const resetAll = async () => {
+        await fetch(`/tasks/reset`, {method: 'PATCH'});
+        await fetchData();
         setResetSwitchStatus(true);
         setTimeout(() => setResetSwitchStatus(false), 300);
     } 

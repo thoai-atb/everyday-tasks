@@ -28,6 +28,11 @@ app.get('/tasks', (req, res) => {
     });
 })
 
+app.get('/tasks/reset', (req, res) => {
+    console.log(req.body);
+    res.send();
+})
+
 app.get('/task/:id', (req, res) => {
     console.log(`GET request task with id ${req.params.id}`);
     let sql = `SELECT * FROM tasks WHERE id = ${req.params.id}`;
@@ -36,6 +41,19 @@ app.get('/task/:id', (req, res) => {
         let query = connection.query(sql, (err, result) => {
             if(err) throw err;
             res.json(result[0]);
+            connection.release();
+        });
+    });
+})
+
+app.patch('/tasks/reset', (req, res) => {
+    console.log(`PATCH request: resetting all tasks unchecked`);
+    let sql = `UPDATE tasks SET checked = 0`;
+    pool.getConnection((error, connection) => {
+        if(error) throw error;
+        let query = connection.query(sql, (err, result) => {
+            if(err) throw err;
+            res.send();
             connection.release();
         });
     });
