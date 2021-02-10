@@ -2,6 +2,15 @@ import Task from './Task.js'
 import Footer from './Footer.js'
 import {useState, useEffect} from 'react';
 
+const fetchTest = async () => {
+    console.log('fetching task ... ');
+    const res = await fetch(`/tasks`);
+    console.log('task fetched ... ');
+    const data = await res.json();
+    console.log('json converted ... ');
+    return data;
+}
+
 const MainPanel = () => {
     const [disableReset, setDisableReset] = useState(true);
     const [tasks, setTasks] = useState([]);
