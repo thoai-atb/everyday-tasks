@@ -59,6 +59,20 @@ app.patch('/tasks/reset', (req, res) => {
     });
 })
 
+app.patch('/task/:id/toggle', (req, res) => {
+    console.log(`PATCH request: toggle check task with id ${req.params.id}`);
+    const sql = `UPDATE tasks SET checked = !checked WHERE id = ${req.params.id}`;
+    pool.getConnection((error, connection) => {
+        if(error) throw error;
+        let query = connection.query(sql, (err, result) => {
+            if(err) throw error;
+            console.log(`Task with id ${req.params.id} toggled ...`);
+            connection.release();
+        });
+    });
+    res.send();
+});
+
 app.put('/task/:id', (req, res) => {
     let task = req.body;
     console.log(`PUT request with body:`);

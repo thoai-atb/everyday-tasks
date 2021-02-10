@@ -76,20 +76,3 @@ h1 {
 .footer {
   width: 100%;
 }
-
-.reset-bar {
-  display: inline-flex;
-  background-color:rgb(88, 88, 88);
-  align-items: center;
-  justify-content: center;
-  width: 70%;
-  height: 60px;
-  margin: 20px;
-  border-radius: 500px;
-  box-shadow: inset 0px 0px 5px 5px rgb(0, 0, 0);
-  font-family: 'Yantramanav', sans-serif;
-  font-size: 25px;
-  font-weight: bolder;
-  color: rgb(199, 199, 199);
-}
-

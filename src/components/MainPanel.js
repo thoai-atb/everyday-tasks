@@ -1,8 +1,9 @@
 import useSound from 'use-sound';
 import Task from './Task.js'
-import Footer from './Footer.js'
+import Footer from './Footer/Footer.js'
 import {useState, useEffect} from 'react';
 import keySfx from '../sounds/key.wav';
+import AddTaskModal from './AddTaskModal/AddTaskModal.js';
 
 const MainPanel = () => {
     const [disableReset, setDisableReset] = useState(true);
@@ -37,13 +38,7 @@ const MainPanel = () => {
         const toBeUpdated = await fetchTask(id);
         const updatedTask = {...toBeUpdated, checked : 1 - toBeUpdated.checked};
         setTasks(tasks.map(t => t.id == id ? updatedTask : t));
-        const res = await fetch(`/task/${id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-type' : 'application/json'
-            },
-            body: JSON.stringify(updatedTask)
-        });
+        const res = await fetch(`/task/${id}/toggle`, {method: 'PATCH'});
     }
 
     const resetAll = async () => {
@@ -53,19 +48,26 @@ const MainPanel = () => {
         setTimeout(() => setResetSwitchStatus(false), 300);
     } 
 
+    const addTask = () => {
+        console.log("add Task");
+    }
+
     return (
-        <div className='container'>
-            <h1>Everyday Tasks</h1>
-            <div className='scroll'>
-                {
-                    tasks.length <= 0 ?
-                    (<p>No Tasks To Show</p>) :
-                    tasks.map((t) => (
-                        <Task task={t} key={t.id} onSwitch={onSwitch}/>
-                    ))
-                }
+        <div>
+            <div className='container'>
+                <h1>Everyday Tasks</h1>
+                <div className='scroll'>
+                    {
+                        tasks.length <= 0 ?
+                        (<p>No Tasks To Show</p>) :
+                        tasks.map((t) => (
+                            <Task task={t} key={t.id} onSwitch={onSwitch}/>
+                        ))
+                    }
+                </div>
+                <Footer resetAll={resetAll} addTask={addTask} resetSwitchStatus={resetSwitchStatus} disableReset={disableReset}/>
             </div>
-            <Footer resetAll={resetAll} resetSwitchStatus={resetSwitchStatus} disableReset={disableReset}/>
+            <AddTaskModal/>
         </div>
     )
 }
