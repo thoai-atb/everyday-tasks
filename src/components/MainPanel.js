@@ -1,18 +1,24 @@
+import useSound from 'use-sound';
 import Task from './Task.js'
 import Footer from './Footer.js'
 import {useState, useEffect} from 'react';
+import keySfx from '../sounds/key.wav';
 
 const MainPanel = () => {
     const [disableReset, setDisableReset] = useState(true);
     const [tasks, setTasks] = useState([]);
     const [resetSwitchStatus, setResetSwitchStatus] = useState(false);
+    const [playKeySfx] = useSound(keySfx);
     
     useEffect(() => {
         fetchData();
     }, []);
 
     useEffect(() => {
-        setDisableReset(!tasks.every(t => t.checked));
+        let allChecked = tasks.every(t => t.checked);
+        if(disableReset && allChecked)
+            playKeySfx();
+        setDisableReset(!allChecked);
     }, [tasks])
     
     const fetchData = async () => {
@@ -30,6 +36,7 @@ const MainPanel = () => {
     const onSwitch = async ({e, id}) => {
         const toBeUpdated = await fetchTask(id);
         const updatedTask = {...toBeUpdated, checked : 1 - toBeUpdated.checked};
+        setTasks(tasks.map(t => t.id == id ? updatedTask : t));
         const res = await fetch(`/task/${id}`, {
             method: 'PUT',
             headers: {
@@ -37,13 +44,12 @@ const MainPanel = () => {
             },
             body: JSON.stringify(updatedTask)
         });
-        setTasks(tasks.map(t => t.id == id ? updatedTask : t));
     }
 
     const resetAll = async () => {
+        setResetSwitchStatus(true);
         await fetch(`/tasks/reset`, {method: 'PATCH'});
         await fetchData();
-        setResetSwitchStatus(true);
         setTimeout(() => setResetSwitchStatus(false), 300);
     } 
 

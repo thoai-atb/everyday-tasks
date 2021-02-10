@@ -43,6 +43,7 @@ h1 {
   margin-bottom: 20px;
   border-radius: 30px;
   background-color:#c1e0d3;
+  transition-duration: 300ms;
 }
 
 .task p {
