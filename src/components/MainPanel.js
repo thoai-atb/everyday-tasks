@@ -49,6 +49,17 @@ const MainPanel = () => {
         setTimeout(() => setResetSwitchStatus(false), 300);
     } 
 
+    const addTaskFunc = async (task) => {
+        await fetch(`/tasks`, {
+            method: 'PUT',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(task)
+        })
+        await fetchData();
+    }
+
     return (
         <div>
             <div className='container'>
@@ -64,7 +75,7 @@ const MainPanel = () => {
                 </div>
                 <Footer resetAll={resetAll} addTask={() => setShowAddTask(true)} resetSwitchStatus={resetSwitchStatus} disableReset={disableReset}/>
             </div>
-            <AddTaskModal showing={showAddTask} closeBtnFunc={() => setShowAddTask(false)}/>
+            <AddTaskModal showing={showAddTask} closeBtnFunc={() => setShowAddTask(false)} addTaskFunc={addTaskFunc}/>
         </div>
     )
 }
