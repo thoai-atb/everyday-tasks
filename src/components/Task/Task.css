@@ -1,0 +1,35 @@
+.task {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 70%;
+    margin-bottom: 20px;
+    border-radius: 30px;
+    background-color:#c1e0d3;
+    transition-duration: 300ms;
+  }
+  
+.task p {
+    display: inline-block;
+    font-family: 'Yantramanav', sans-serif;
+    font-size: 25px;
+    font-weight: bolder;
+}
+
+.trash {
+    margin-left: 20px;
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+}
+
+.trash:hover {
+    filter: opacity(0.3);
+    transform: rotate(20deg);
+}
+
+.trash:active {
+    transform: rotate(20deg) scale(0.9);
+}

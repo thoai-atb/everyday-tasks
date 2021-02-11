@@ -1,5 +1,5 @@
 import useSound from 'use-sound';
-import Task from './Task.js'
+import Task from './Task/Task.js'
 import Footer from './Footer/Footer.js'
 import {useState, useEffect} from 'react';
 import keySfx from '../sounds/key.wav';
@@ -60,6 +60,11 @@ const MainPanel = () => {
         await fetchData();
     }
 
+    const deleteTaskFunc = async (id) => {
+        await fetch(`/task/${id}`, {method: 'DELETE'});
+        await fetchData();
+    }
+
     return (
         <div>
             <div className='container'>
@@ -69,7 +74,7 @@ const MainPanel = () => {
                         tasks.length <= 0 ?
                         (<p>No Tasks To Show</p>) :
                         tasks.map((t) => (
-                            <Task task={t} key={t.id} onSwitch={onSwitch}/>
+                            <Task task={t} key={t.id} onSwitch={onSwitch} deleteFunc={deleteTaskFunc}/>
                         ))
                     }
                 </div>

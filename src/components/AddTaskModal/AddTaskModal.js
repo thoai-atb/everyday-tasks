@@ -23,6 +23,7 @@ const AddTaskModal = ({showing, closeBtnFunc, addTaskFunc}) => {
             checked: status,
         }
         addTaskFunc(task);
+        setTaskName("");
         if(!continueOption)
             closeBtnFunc();
     }

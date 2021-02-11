@@ -7,7 +7,7 @@ const Footer = ({resetSwitchStatus, disableReset, resetAll, addTask}) => {
             <div className='reset-bar'>
                 Reset Tasks 
                 <span><Switch func={resetAll} disabled={disableReset} checked={resetSwitchStatus} alwaysGreen={true}/></span>
-                <button onClick={addTask}>New Task</button>
+                <button onClick={addTask}>New</button>
             </div>
         </div>
     )

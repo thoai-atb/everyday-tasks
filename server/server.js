@@ -86,6 +86,20 @@ app.patch('/task/:id/toggle', (req, res) => {
     res.send();
 });
 
+app.delete('/task/:id', (req, res) => {
+    console.log(`DELETE request task with id ${req.params.id}`);
+    const sql = `DELETE FROM tasks WHERE id = ${req.params.id}`;
+    pool.getConnection((error, connection) => {
+        if(error) throw error;
+        let query = connection.query(sql, (err, result) => {
+            if(err) throw error;
+            console.log(`Task with id ${req.params.id} deleted ...`);
+            connection.release();
+        })
+    })
+    res.send();
+})
+
 app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`);
 })
