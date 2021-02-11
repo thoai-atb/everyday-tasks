@@ -1,15 +1,13 @@
 import './AddTaskModal.css'
+import {useState} from 'react'
 
-const AddTaskModal = () => {
-    const func = () => {
-        console.log('close');
-    }
+const AddTaskModal = ({showing, closeBtnFunc}) => {
     return (
-        <div className='taskmodal'>
-            <div className='content'>
+        <div className={`taskmodal ${showing ? "" : "hiding"}`} onMouseDown={closeBtnFunc}> 
+            <div className='content' onMouseDown={(e) => {e.stopPropagation()}}>
                 <div className='header'>
                     <p>Add New Task</p>
-                    <div className='closebtn' onClick={func}>
+                    <div className='closebtn' onMouseDown={closeBtnFunc}>
                         <span>&times;</span>
                     </div>
                 </div>

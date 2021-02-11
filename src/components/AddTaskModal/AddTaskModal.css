@@ -8,6 +8,10 @@
     background-color: rgba(0, 0, 0, 0.25);
 }
 
+.taskmodal.hiding {
+    display: none;
+}
+
 .taskmodal .content {
     background-color: white;
     display: flex;
@@ -29,7 +33,9 @@
     align-items: center;
     justify-content: space-between;
     height: 60px;
-    padding: 10px;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 20px;
     /* border: 1px solid blue; */
 }
 

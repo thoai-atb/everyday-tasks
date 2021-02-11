@@ -6,9 +6,10 @@ import keySfx from '../sounds/key.wav';
 import AddTaskModal from './AddTaskModal/AddTaskModal.js';
 
 const MainPanel = () => {
-    const [disableReset, setDisableReset] = useState(true);
     const [tasks, setTasks] = useState([]);
+    const [disableReset, setDisableReset] = useState(true);
     const [resetSwitchStatus, setResetSwitchStatus] = useState(false);
+    const [showAddTask, setShowAddTask] = useState(false);
     const [playKeySfx] = useSound(keySfx);
     
     useEffect(() => {
@@ -48,10 +49,6 @@ const MainPanel = () => {
         setTimeout(() => setResetSwitchStatus(false), 300);
     } 
 
-    const addTask = () => {
-        console.log("add Task");
-    }
-
     return (
         <div>
             <div className='container'>
@@ -65,9 +62,9 @@ const MainPanel = () => {
                         ))
                     }
                 </div>
-                <Footer resetAll={resetAll} addTask={addTask} resetSwitchStatus={resetSwitchStatus} disableReset={disableReset}/>
+                <Footer resetAll={resetAll} addTask={() => setShowAddTask(true)} resetSwitchStatus={resetSwitchStatus} disableReset={disableReset}/>
             </div>
-            <AddTaskModal/>
+            <AddTaskModal showing={showAddTask} closeBtnFunc={() => setShowAddTask(false)}/>
         </div>
     )
 }
