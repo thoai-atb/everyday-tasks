@@ -96,6 +96,14 @@
     font-family: Arial, Helvetica, sans-serif;
 }  
 
+.taskmodal .content .body .message {
+    height: 15px;
+    padding: none;
+    color: rgb(0, 122, 0);
+    font-size: 15px;
+    font-family: Arial, Helvetica, sans-serif;
+}  
+
 /* FOOTER */
 
 .taskmodal .content .footer {

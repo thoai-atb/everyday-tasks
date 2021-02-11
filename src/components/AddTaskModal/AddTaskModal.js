@@ -7,16 +7,24 @@ const AddTaskModal = ({showing, closeBtnFunc, addTaskFunc}) => {
     const [status, setStatus] = useState(false);
     const [continueOption, setContinueOption] = useState(false);
     const [nameEmptyWarning, setNameEmptyWarning] = useState(false);
+    const [nameEmptyTimeout, setNameEmptyTimeout] = useState(null);
+    const [addMessage, setAddMessage] = useState(false);
+    const [messageTimeout, setMessageTimeout] = useState(null);
 
     const submitFunc = () => {
         if(taskName === "") {
-            if(!nameEmptyWarning) {
-                setNameEmptyWarning(true);
-                setTimeout(() => {
-                    setNameEmptyWarning(false);
-                }, 1000);
-            }
+            setNameEmptyWarning(true);
+            window.clearTimeout(nameEmptyTimeout);
+            setNameEmptyTimeout(setTimeout(() => {
+                setNameEmptyWarning(false);
+            }, 1000));
             return;
+        } else {
+            setAddMessage(true);
+            window.clearTimeout(messageTimeout);
+            setMessageTimeout(setTimeout(() => {
+                setAddMessage(false);
+            }, 1000));
         }
         const task = {
             name: taskName,
@@ -42,7 +50,7 @@ const AddTaskModal = ({showing, closeBtnFunc, addTaskFunc}) => {
                         <tbody>
                             <tr>
                                 <td><label htmlFor='name'>Task Name</label></td>
-                                <td><input id='name' type='text' placeholder='Pong' value={taskName} onChange={e => setTaskName(e.target.value)}/></td>
+                                <td><input id='name' type='text' placeholder='Pong' value={taskName} onKeyDown={e => {if(e.key == "Enter") submitFunc()}} onChange={e => setTaskName(e.target.value)}/></td>
                             </tr>
                             {
                                 nameEmptyWarning && (
@@ -56,6 +64,14 @@ const AddTaskModal = ({showing, closeBtnFunc, addTaskFunc}) => {
                                 <td><label htmlFor='status'>Status</label></td>
                                 <td><Switch id='status' playSound={false} checked={status} func={() => {setStatus(!status)}}/></td>
                             </tr>
+                            {
+                                addMessage && (
+                                    <tr className='message'>
+                                        <td></td>
+                                        <td><p>Task added!</p></td>
+                                    </tr>
+                                )
+                            }
                         </tbody>
                     </table>
                 </div>

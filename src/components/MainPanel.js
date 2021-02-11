@@ -61,8 +61,8 @@ const MainPanel = () => {
     }
 
     const deleteTaskFunc = async (id) => {
+        setTasks(tasks.filter(t => t.id != id));
         await fetch(`/task/${id}`, {method: 'DELETE'});
-        await fetchData();
     }
 
     return (
