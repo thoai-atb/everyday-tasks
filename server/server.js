@@ -1,103 +1,79 @@
 const express = require('express');
 const bp = require('body-parser');
-const mysql = require('mysql');
+const Pool = require('pg').Pool;
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-const pool = mysql.createPool({
-    connectionLimit: 10,
-    host     : 'localhost',
-    user     : 'root',
-    password : '',
-    database : 'everyday_tasks'
+const pool = new Pool({
+    user: 'postgres',
+    host: 'localhost',
+    database: 'everyday_tasks',
+    password: '123',
+    port: 5432,
 });
 
 app.use(bp.json())
 app.use(bp.urlencoded({ extended: true }))
    
 app.get('/tasks', (req, res) => {
-    let sql = 'SELECT * FROM tasks';
-    pool.getConnection((error, connection) => {
-        if(error) throw error;
-        connection.query(sql, (err, result) => {
-            if(err) throw err;
-            res.json(result);
-            console.log(`Fetched all tasks ...`);
-            connection.release();
-        });
-    });
-})
-
-app.get('/tasks/reset', (req, res) => {
-    console.log(req.body);
-    res.send();
-})
-
-app.put('/tasks', (req, res) => {
-    console.log(`PUT request create new task`);
-    let sql = `INSERT INTO tasks SET ?`;
-    pool.getConnection((error, connection) => {
-        if(error) throw error;
-        let query = connection.query(sql, req.body, (err, result) => {
-            if(err) throw err;
-            res.send('PUT success');
-            connection.release();
-        });
-    });
+    console.log(`GET request get all tasks`);
+    let sql = 'SELECT * FROM tasks ORDER BY id';
+    pool.query(sql, (err, result) => {
+        if(err) throw err;
+        res.status(200).json(result.rows);
+        console.log('Fetched all tasks ...');
+    })
 })
 
 app.get('/task/:id', (req, res) => {
     console.log(`GET request task with id ${req.params.id}`);
     let sql = `SELECT * FROM tasks WHERE id = ${req.params.id}`;
-    pool.getConnection((error, connection) => {
-        if(error) throw error;
-        let query = connection.query(sql, (err, result) => {
-            if(err) throw err;
-            res.json(result[0]);
-            connection.release();
-        });
-    });
+    pool.query(sql, (err, result) => {
+        if(err) throw err;
+        res.status(200).json(result.rows[0]);
+        console.log('Fetched single task ...');
+    })
+})
+
+app.put('/tasks', (req, res) => {
+    console.log(`PUT request create new task`);
+    const {name, checked} = req.body;
+    let sql = `INSERT INTO tasks (name, checked) VALUES ('${name}', '${checked}')`;
+    pool.query(sql, (err, result) => {
+        if(err) throw err;
+        res.status(200).send('PUT success');
+        console.log('New task created ...');
+    })
 })
 
 app.patch('/tasks/reset', (req, res) => {
     console.log(`PATCH request: resetting all tasks unchecked`);
-    let sql = `UPDATE tasks SET checked = 0`;
-    pool.getConnection((error, connection) => {
-        if(error) throw error;
-        let query = connection.query(sql, (err, result) => {
-            if(err) throw err;
-            res.send();
-            connection.release();
-        });
-    });
+    let sql = `UPDATE tasks SET checked = 'false'`;
+    pool.query(sql, (err, result) => {
+        if(err) throw err;
+        res.status(200).send('Update success');
+        console.log('Reset all tasks ...');
+    })
 })
 
 app.patch('/task/:id/toggle', (req, res) => {
     console.log(`PATCH request: toggle check task with id ${req.params.id}`);
-    const sql = `UPDATE tasks SET checked = !checked WHERE id = ${req.params.id}`;
-    pool.getConnection((error, connection) => {
-        if(error) throw error;
-        let query = connection.query(sql, (err, result) => {
-            if(err) throw error;
-            console.log(`Task with id ${req.params.id} toggled ...`);
-            connection.release();
-        });
-    });
-    res.send();
+    const sql = `UPDATE tasks SET checked = NOT checked WHERE id = ${req.params.id}`;
+    pool.query(sql, (err, result) => {
+        if(err) throw err;
+        res.status(200).send('Toggling success');
+        console.log('Task toggled ...');
+    })
 });
 
 app.delete('/task/:id', (req, res) => {
     console.log(`DELETE request task with id ${req.params.id}`);
     const sql = `DELETE FROM tasks WHERE id = ${req.params.id}`;
-    pool.getConnection((error, connection) => {
-        if(error) throw error;
-        let query = connection.query(sql, (err, result) => {
-            if(err) throw error;
-            console.log(`Task with id ${req.params.id} deleted ...`);
-            connection.release();
-        })
+    pool.query(sql, (err, result) => {
+        if(err) throw err;
+        res.status(200).send('Deleting success');
+        console.log('Task deleted ...');
     })
-    res.send();
 })
 
 app.listen(PORT, () => {
