@@ -1,10 +1,13 @@
 const express = require('express');
 const bp = require('body-parser');
 const Pool = require('pg').Pool;
-const app = express();
-const PORT = process.env.PORT || 5000;
+const path = require('path');
 
-const pool = new Pool({
+// CONSTANT
+const PORT = process.env.PORT || 5000;
+const connectionString = process.env.DATABASE_URL;
+
+const pool = connectionString ? new Pool ({connectionString}) : new Pool({
     user: 'postgres',
     host: 'localhost',
     database: 'everyday_tasks',
@@ -12,8 +15,10 @@ const pool = new Pool({
     port: 5432,
 });
 
+const app = express();
 app.use(bp.json())
 app.use(bp.urlencoded({ extended: true }))
+app.use(express.static(path.join(__dirname, "client", "build")))
    
 app.get('/tasks', (req, res) => {
     console.log(`GET request get all tasks`);
@@ -74,6 +79,10 @@ app.delete('/task/:id', (req, res) => {
         res.status(200).send('Deleting success');
         console.log('Task deleted ...');
     })
+})
+
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "client", "build", "index.html"));
 })
 
 app.listen(PORT, () => {
