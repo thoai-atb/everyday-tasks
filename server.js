@@ -7,7 +7,14 @@ const path = require('path');
 const PORT = process.env.PORT || 5000;
 const connectionString = process.env.DATABASE_URL;
 
-const pool = connectionString ? new Pool ({connectionString}) : new Pool({
+const pool = connectionString ?
+ new Pool ({
+    connectionString,
+    ssl: {
+        rejectUnauthorized: false
+    }
+}) 
+: new Pool({
     user: 'postgres',
     host: 'localhost',
     database: 'everyday_tasks',
